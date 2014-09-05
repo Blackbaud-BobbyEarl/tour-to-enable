@@ -16,6 +16,8 @@
   <p>
     <button type="button" class="btn btn-default btn-lg" id="btn-login" style="display: none">Login</button>
     <button type="button" class="btn btn-primary btn-lg" id="btn-record" style="display: none">Record</button>
+    <button type="button" class="btn btn-default btn-lg" id="btn-debug">Debug</button>
+    <button type="button" class="btn btn-default btn-lg" id="btn-clear">Clear</button>
   </p>
   
   <div id="results">Loading...</div>
@@ -37,36 +39,44 @@
     }
   });
   
-  
-  btnRecord.addEventListener('click', function () {
+  function record(position) {
+    var params = {
+      Key: 'current-location.json',
+      ContentType: 'json',
+      Body: JSON.stringify(position),
+      ACL: 'public-read'
+    };
 
-    results.innerHTML = '<p class="alert alert-info">Recording...</p>';
-    
-    navigator.geolocation.getCurrentPosition(function(position) {
-
-      var params = {
-        Key: 'current-location.json',
-        ContentType: 'json',
-        Body: JSON.stringify(position),
-        ACL: 'public-read'
-      };
-
-      bucket.config.credentials = new AWS.WebIdentityCredentials({
-        ProviderId: 'graph.facebook.com',
-        RoleArn: roleArn,
-        WebIdentityToken: fbResponse.authResponse.accessToken
-      });
-
-      bucket.putObject(params, function (err, data) {
-        if (err) {
-          results.innerHTML = '<p class="alert alert-danger">Error recording location: ' + err + '</p>';
-        } else {
-          results.innerHTML = '<p class="alert alert-success">Location successfully recorded</p>';
-        }
-      });
-      
+    bucket.config.credentials = new AWS.WebIdentityCredentials({
+      ProviderId: 'graph.facebook.com',
+      RoleArn: roleArn,
+      WebIdentityToken: fbResponse.authResponse.accessToken
     });
 
+    bucket.putObject(params, function (err, data) {
+      if (err) {
+        results.innerHTML = '<p class="alert alert-danger">Error recording location: ' + err + '</p>';
+      } else {
+        results.innerHTML = '<p class="alert alert-success">Location successfully recorded</p>';
+      }
+    });
+  }
+  
+  btnRecord.addEventListener('click', function () {
+    results.innerHTML = '<p class="alert alert-info">Recording...</p>';
+    navigator.geolocation.getCurrentPosition(record);
+  }, false);
+  
+  btnDebug.addEventListener('click', function() {
+    results.innerHTML = 'Debugging...';
+    navigator.geolocation.getCurrentPosition(function(position) {
+      results.innerHTML = JSON.stringify(position);
+    });
+  }, false);
+  
+  btnClear.addEventListener('click', function() {
+    results.innerHTML = '';
+    record({});
   }, false);
   
   btnLogin.addEventListener('click', function() {
