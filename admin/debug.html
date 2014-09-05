@@ -1,0 +1,14 @@
+<html>
+<head>
+
+</head>
+<body>
+<div id="results">Loading...</div>
+<script>
+navigator.geolocation.getCurrentPosition(function(position) {
+  document.getElementById('results').innerHTML = JSON.stringify(position);
+});
+</script>
+
+</body>
+</html>
