@@ -95,8 +95,8 @@
     FB.getLoginStatus(function(response) {
       fbResponse = response;
       results.innerHTML = '';
-      btnLogin.style.display = response.status == 'connected' ? 'none' : 'block';
-      btnRecord.style.display = response.status == 'connected' ? 'block' : 'none';
+      btnLogin.style.display = response.status == 'connected' ? 'none' : 'inline-block';
+      btnRecord.style.display = response.status == 'connected' ? 'inline-block' : 'none';
     });
   };
 
