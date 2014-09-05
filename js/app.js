@@ -23,8 +23,6 @@
             }
           }
           
-          console.log(trip);
-          
           var bbGoogleMaps = $(element).googleMaps({
             locations: trip.waypoints,
             map: {
@@ -63,14 +61,16 @@
           }
           
           $.getJSON('//s3.amazonaws.com/tour-to-enable/current-location.json', function(location) {
-            var currentLocation = new google.maps.Marker({
-              map: bbGoogleMaps.map,
-              title: 'Current Location',
-              animation: google.maps.Animation.DROP,
-              position: new google.maps.LatLng(location.coords.latitude, location.coords.longitude),
-              icon: 'img/wheel.png'
-            });
-            bbGoogleMaps.map.panTo(currentLocation.position);
+            if (typeof location.coords !== 'undefined') {
+              var currentLocation = new google.maps.Marker({
+                map: bbGoogleMaps.map,
+                title: 'Current Location',
+                animation: google.maps.Animation.DROP,
+                position: new google.maps.LatLng(location.coords.latitude, location.coords.longitude),
+                icon: 'img/wheel.png'
+              });
+              bbGoogleMaps.map.panTo(currentLocation.position);
+            }
           });
           
         });
