@@ -73,7 +73,7 @@
   btnDebug.addEventListener('click', function() {
     results.innerHTML = 'Debugging...';
     navigator.geolocation.getCurrentPosition(function(position) {
-      results.innerHTML = JSON.stringify(position);
+      results.innerHTML = '<p class="alert alert-info">' + JSON.stringify(position) + '</p>';
     });
   }, false);
   
