@@ -72,7 +72,7 @@
               bbGoogleMaps.map.panTo(currentLocation.position);
               
               var infoWindow = new google.maps.InfoWindow({
-                content: '<div class="infoWindow"><h3>Last Updated</h3><p>' + moment(currentLocation.timestamp).fromNow() + '</p></div>'
+                content: '<div class="infoWindow"><h3>Last Updated</h3><p>' + moment(location.timestamp).fromNow() + '</p></div>'
               });
               google.maps.event.addListener(currentLocation, 'click', function() {
                 infoWindow.open(bbGoogleMaps.map, currentLocation)
