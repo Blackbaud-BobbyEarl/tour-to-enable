@@ -60,7 +60,8 @@
             trip.legs[i].route.setMap(bbGoogleMaps.map);            
           }
           
-          $.getJSON('//s3.amazonaws.com/tour-to-enable/current-location.json', function(location) {
+          $.getJSON('//api.blackbaud.com/services/proxy/?mode=raw&url=' + encodeURIComponent('http://s3.amazonaws.com/tour-to-enable/current-location.json'), function(data) {
+            var location = data.contents;
             if (typeof location.coords !== 'undefined') {
               var currentLocation = new google.maps.Marker({
                 map: bbGoogleMaps.map,
