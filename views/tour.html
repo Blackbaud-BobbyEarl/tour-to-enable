@@ -1,5 +1,8 @@
 <div ng-controller="TourController as tc" class="full-height">
-  <map center="41,-87" zoom="5" styles="[{'featureType':'landscape.natural','elementType':'geometry.fill','stylers':[{'visibility':'on'},{'color':'#e0efef'}]},{'featureType':'poi','elementType':'geometry.fill','stylers':[{'visibility':'on'},{'hue':'#1900ff'},{'color':'#c0e8e8'}]},{'featureType':'road','elementType':'geometry','stylers':[{'lightness':100},{'visibility':'simplified'}]},{'featureType':'road','elementType':'labels','stylers':[{'visibility':'off'}]},{'featureType':'transit.line','elementType':'geometry','stylers':[{'visibility':'on'},{'lightness':700}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#7dcdcd'}]}]">
+  <map
+    zoom="5"
+    styles="[{'featureType':'landscape.natural','elementType':'geometry.fill','stylers':[{'visibility':'on'},{'color':'#e0efef'}]},{'featureType':'poi','elementType':'geometry.fill','stylers':[{'visibility':'on'},{'hue':'#1900ff'},{'color':'#c0e8e8'}]},{'featureType':'road','elementType':'geometry','stylers':[{'lightness':100},{'visibility':'simplified'}]},{'featureType':'road','elementType':'labels','stylers':[{'visibility':'off'}]},{'featureType':'transit.line','elementType':'geometry','stylers':[{'visibility':'on'},{'lightness':700}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#7dcdcd'}]}]"
+    center="{{ tc.lastLocation.attributes.locations[0].latitude }},{{ tc.lastLocation.attributes.locations[0].longitude }}">
 
     <marker
       ng-repeat="waypoint in tc.tour.waypoints"
@@ -18,7 +21,7 @@
     <info-window id="infowindow-poi">
       <div>
         <h3>{{:: data.name }}</h3>
-        <div class="pull-right thumbnail waypoint-thumbnail" ng-show="waypoint.poi.primary_image_url">
+        <div class="pull-right thumbnail waypoint-thumbnail" ng-show="data.poi.primary_image_url">
           <img ng-src="{{ data.poi.primary_image_url }}"/>
         </div>
         <p ng-bind-html="data.poi.description | unsafe"></p>
@@ -30,8 +33,7 @@
 
     <info-window id="infowindow-checkin">
       <div>
-        <h3>Last Checkin</h3>
-        <p>Last checked in <span am-time-ago="data.createdAt"></span></p>
+        Last checked in <span am-time-ago="data.createdAt"></span>
       </div>
     </info-window>
 
