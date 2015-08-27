@@ -158,7 +158,6 @@
                 // Show current location
                 TourService.query.find({
                     success: function (results) {
-                        console.log(results);
                         vm.locations = results;
                         vm.lastLocation = results[results.length - 1];
                         vm.sync();
