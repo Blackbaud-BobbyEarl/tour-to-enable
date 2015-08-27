@@ -10,8 +10,13 @@
                 POSITION: 1,
                 AUTH: 2,
                 WRITING: 3,
-                READING: 4
-            }
+                READING: 4,
+                ACCESS: 5
+            },
+            USERS: [
+                'bobby@simplyearl.com',
+                'ben@room25.com'
+            ]
         })
         .config(function ($stateProvider, $urlRouterProvider) {
             OAuth.initialize('0xbRhzdwzC5maT0FxiVtpfQRvwk');
@@ -242,8 +247,15 @@
                     OAuth
                         .popup('facebook')
                         .done(function (result) {
-                            vm.token = result.access_token;
-                            localStorageService.set('token', vm.token);
+                            result.me().done(function (data) {
+                                if (CONFIG.USERS.indexOf(data.email) === -1) {
+                                    vm.error = CONFIG.ERRORS.ACCESS;
+                                } else {
+                                    vm.token = result.access_token;
+                                    localStorageService.set('token', vm.token);
+                                }
+                                vm.sync();
+                            });
                         })
                         .fail(function (error) {
                             vm.error = CONFIG.ERRORS.AUTH;
@@ -252,6 +264,11 @@
                         .always(function () {
                             vm.sync();
                         });
+                };
+
+                vm.logout = function () {
+                    vm.token = '';
+                    localStorageService.set('token', vm.token);
                 };
 
                 vm.isError = function (key) {
