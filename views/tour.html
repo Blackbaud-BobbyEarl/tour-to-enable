@@ -12,7 +12,8 @@
         ng-if="waypoint.type === 'poi'"
         position="{{:: waypoint.location[1] }},{{:: waypoint.location[0] }}"
         on-click="tc.showInfoWindow(event, 'infowindow-poi', waypoint)"
-        icon="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAiklEQVR42mNgQIAoIF4NxGegdCCSHAMzEC+NUlH5v9rF5f+ZoCAwHaig8B8oPhOmKC1NU/P//7Q0DByrqgpSGAtSdOCAry9WRXt9fECK9oIUPXwYFYVV0e2ICJCi20SbFAuyG5uiECUlkKIQmOPng3y30d0d7Lt1bm4w301jQAOgcNoIDad1yOEEAFm9fSv/VqtJAAAAAElFTkSuQmCC">
+        icon="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAiklEQVR42mNgQIAoIF4NxGegdCCSHAMzEC+NUlH5v9rF5f+ZoCAwHaig8B8oPhOmKC1NU/P//7Q0DByrqgpSGAtSdOCAry9WRXt9fECK9oIUPXwYFYVV0e2ICJCi20SbFAuyG5uiECUlkKIQmOPng3y30d0d7Lt1bm4w301jQAOgcNoIDad1yOEEAFm9fSv/VqtJAAAAAElFTkSuQmCC"
+        z-index="1">
       </marker>
     </div>
 
@@ -21,13 +22,15 @@
       ng-if="checkin.location"
       position="{{:: checkin.location.latitude }},{{:: checkin.location.longitude }}"
       icon="img/1440572871_Instagram-1.png"
-      on-click="tc.showInfoWindow(event, 'infowindow-instagram', checkin)">
+      on-click="tc.showInfoWindow(event, 'infowindow-instagram', checkin)"
+      z-index="2">
     </marker>
 
     <marker
       position="{{:: tc.lastLocation.attributes.locations[0].latitude }},{{:: tc.lastLocation.attributes.locations[0].longitude }}"
       on-click="tc.showInfoWindow(event, 'infowindow-checkin', tc.lastLocation)"
-      icon="img/marker-small.png">
+      icon="img/marker-small.png"
+      z-index="3">
     </marker>
 
     <info-window id="infowindow-poi">

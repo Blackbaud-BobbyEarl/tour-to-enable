@@ -260,6 +260,7 @@
                         .fail(function (error) {
                             vm.error = CONFIG.ERRORS.AUTH;
                             vm.errorDetails = error;
+                            console.log(error);
                         })
                         .always(function () {
                             vm.sync();
