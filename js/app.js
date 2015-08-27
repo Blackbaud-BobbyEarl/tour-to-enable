@@ -230,9 +230,15 @@
                 };
 
                 vm.togglePolling = function () {
+                    var audio = document.getElementsByTagName('audio')[0];
                     vm.polling = !vm.polling;
                     localStorageService.set('polling', vm.polling);
                     vm.pollingStartStop();
+                    if (vm.polling) {
+                        audio.play();
+                    } else {
+                        audio.pause();
+                    }
                 };
 
                 vm.pollingStartStop = function () {
@@ -260,7 +266,6 @@
                         .fail(function (error) {
                             vm.error = CONFIG.ERRORS.AUTH;
                             vm.errorDetails = error;
-                            console.log(error);
                         })
                         .always(function () {
                             vm.sync();
@@ -281,9 +286,10 @@
                 };
 
                 // Previously asked to poll, start it back on page Load
-                if (vm.polling) {
-                    vm.pollingStartStop();
-                }
+                // Disabling this since I can't autoplay the audio
+                // if (vm.polling) {
+                //     vm.pollingStartStop();
+                // }
             }
         ])
         .filter('unsafe', function ($sce) {
