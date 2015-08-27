@@ -37,10 +37,9 @@
         })
         .service('TourService', function () {
             var Tour = Parse.Object.extend('Tour'),
-                query = new Parse.Query(Tour),
-                tour = new Tour();
+                query = new Parse.Query(Tour);
             return {
-                tour: tour,
+                Tour: Tour,
                 query: query
             };
         })
@@ -159,6 +158,7 @@
                 // Show current location
                 TourService.query.find({
                     success: function (results) {
+                        console.log(results);
                         vm.locations = results;
                         vm.lastLocation = results[results.length - 1];
                         vm.sync();
@@ -193,7 +193,8 @@
                     vm.updating = true;
                     navigator.geolocation.getCurrentPosition(
                         function (position) {
-                            TourService.tour.add('locations', {
+                            var tour = new TourService.Tour();
+                            tour.save({
                                 accuracy: position.coords.accuracy,
                                 altitude: position.coords.altitude,
                                 altitudeAccuracy: position.coords.altitudeAccuracy,
@@ -201,8 +202,7 @@
                                 latitude: position.coords.latitude,
                                 longitude: position.coords.longitude,
                                 speed: position.coords.speed
-                            });
-                            TourService.tour.save(null, {
+                            }, {
                                 success: function () {
                                     vm.updating = false;
                                     vm.success = true;
