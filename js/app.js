@@ -145,16 +145,7 @@
                         strokeOpacity: 0
                     });
                 });
-
-                // Show Instagram checkins
-                $http
-                    .get('https://developer.blackbaud.com/proxy/?mode=native&url=' + encodeURIComponent('https://api.instagram.com/v1/users/1464249720/media/recent?access_token=4355.1fb234f.353294207c1e4279808b5e25e19f0d55'))
-                    .then(function (response) {
-                        vm.instagram = response.data.data;
-                    }, function () {
-                        console.log('error loading instagram feed');
-                    });
-
+                
                 // Show current location
                 TourService.query.find({
                     success: function (results) {
@@ -167,6 +158,15 @@
                         vm.errorDetails = error;
                     }
                 });
+
+                // Show Instagram checkins
+                $http
+                    .get('https://developer.blackbaud.com/proxy/?mode=native&url=' + encodeURIComponent('https://api.instagram.com/v1/users/1464249720/media/recent?access_token=4355.1fb234f.353294207c1e4279808b5e25e19f0d55'))
+                    .then(function (response) {
+                        vm.instagram = response.data.data;
+                    }, function () {
+                        console.log('error loading instagram feed');
+                    });
             }
         ])
         .controller('AdminController', [
