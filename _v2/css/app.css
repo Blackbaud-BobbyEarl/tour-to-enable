@@ -1,0 +1,23 @@
+html,
+body,
+.full-height {
+  height: 100%;
+}
+
+map {
+  height: 100% !important;
+  position: relative;
+  width: 100%;
+}
+
+.waypoint-type-via {
+  cursor: default !important;
+}
+
+.waypoint-thumbnail {
+  margin: 0 0 10px 10px;
+}
+
+.waypoint-thumbnail img {
+  max-width: 150px;
+}

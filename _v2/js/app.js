@@ -52,16 +52,7 @@
 
                 var vm = this;
 
-                vm.legs = [
-                    '5697538',
-                    '5697619',
-                    '5698490',
-                    '5698548',
-                    '5698556',
-                    '5698589',
-                    '5698662',
-                    '5698698'
-                ];
+                vm.legs = [];
 
                 vm.sync = function () {
                     $timeout(function () {}, 0);
@@ -78,41 +69,104 @@
                     $scope.showInfoWindow.apply(this, [event, id]);
                 };
 
-                function showStravaRoute(url) {
+                function showPath(json, reverse, config) {
+                    var path = [];
+                    json.points[0].forEach(function (leg) {
+                        leg.forEach(function (point) {
+                            path.push(new google.maps.LatLng(point[reverse ? 1 : 0], point[reverse ? 0 : 1]));
+                        });
+                    });
+                    $scope.$on('mapInitialized', function (event, map) {
+                        var poly = new google.maps.Polyline({
+                            path: path,
+                            geodesic: true,
+                            strokeColor: config.strokeColor || '#000000',
+                            //strokeOpacity: config.strokeOpacity || 1,
+                            strokeOpacity: 0,
+                            strokeWeight: config.strokeWeight || 2,
+                            icons: [{
+                                icon: {
+                                    path: 'M 0,-1 0,1',
+                                    strokeOpacity: 0.2,
+                                    scale: 4
+                                },
+                                offset: '0',
+                                repeat: '20px'
+                            }]
+                        });
+
+                        poly.setMap(map);
+                        vm.sync();
+                    });
+                }
+
+                function showEncodedPath(url) {
                     $http
                         .get(url)
-                        .success(function (route) {
+                        .success(function (tour) {
+                            vm.legs.push(tour);
                             $scope.$on('mapInitialized', function (event, map) {
-                                var decoded = google.maps.geometry.encoding.decodePath(route.map.polyline),
-                                    poly = new google.maps.Polyline({
-                                        path: decoded,
-                                        geodesic: true,
-                                        strokeColor: '#3d88b6',
-                                        strokeOpacity: 1.0,
-                                        strokeWeight: 4
-                                    });
-                                poly.setMap(map);
+                                tour.legs.forEach(function () {
+                                    var decoded = google.maps.geometry.encoding.decodePath(tour.encoded_polyline),
+                                        border = new google.maps.Polyline({
+                                            path: decoded,
+                                            geodesic: true,
+                                            strokeColor: '#eddfe2',
+                                            strokeOpacity: 0.7,
+                                            strokeWeight: 20
+                                        }),
+                                        poly = new google.maps.Polyline({
+                                            path: decoded,
+                                            geodesic: true,
+                                            strokeColor: '#3d88b6',
+                                            strokeOpacity: 1.0,
+                                            strokeWeight: 4
+                                        });
+                                    border.setMap(map);
+                                    poly.setMap(map);
+                                });
+                                vm.sync();
                             });
+                        })
+                        .error(function (error) {
+                            console.log(error);
                         });
                 }
 
-                vm.legs.forEach(function (id) {
-                    showStravaRoute('data/' + id + '.json');
+                // Show encoded paths
+                showEncodedPath('data/tour-leg1.json');
+                showEncodedPath('data/tour-leg2.json');
+
+                // Show train path
+                $http.get('data/route-train.json').success(function (data) {
+                    showPath(data, true, {
+                        strokeWeight: 1,
+                        strokeColor: '#000000',
+                        strokeOpacity: 0
+                    });
+                });
+                
+                // Show current location
+                TourService.query.find({
+                    success: function (results) {
+                        vm.locations = results;
+                        vm.lastLocation = results[results.length - 1];
+                        vm.sync();
+                    },
+                    error: function (error) {
+                        vm.error = CONFIG.ERRORS.READING;
+                        vm.errorDetails = error;
+                    }
                 });
 
-                // Show current location
-                // TourService.query.find({
-                //     success: function (results) {
-                //         vm.locations = results;
-                //         vm.lastLocation = results[results.length - 1];
-                //         vm.sync();
-                //     },
-                //     error: function (error) {
-                //         vm.error = CONFIG.ERRORS.READING;
-                //         vm.errorDetails = error;
-                //     }
-                // });
-
+                // Show Instagram checkins
+                $http
+                    .get('https://developer.blackbaud.com/proxy/?mode=native&url=' + encodeURIComponent('https://api.instagram.com/v1/users/1464249720/media/recent?access_token=4355.1fb234f.353294207c1e4279808b5e25e19f0d55'))
+                    .then(function (response) {
+                        vm.instagram = response.data.data;
+                    }, function () {
+                        console.log('error loading instagram feed');
+                    });
             }
         ])
         .controller('AdminController', [
